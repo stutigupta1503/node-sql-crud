@@ -96,16 +96,23 @@ app.patch("/user/:id/edit", (req, res) => {
   }
 })
 
-// app.get('/', async (req, res) => {
-//    let q = `SELECT COUNT(*) FROM user`;
-//    try {
-//        const [result] = await connection.promise().query(q);
-//        res.send(result[0]);
-//    } catch (err) {
-//        console.log(err);
-//        res.status(500).send("Something is wrong in DB");
-//    }
-// });
+// ADD USER
+app.get("/user", (req, res) => {
+  res.render("add.ejs");
+})
+app.post("/user", (req, res) => {
+  let {id, username, email, password} = req.body;
+  let q = `INSERT INTO user (id, username, email, password) VALUES ('${id}', '${username}', '${email}', '${password}');`;
+  try {
+    connection.query(q, (err, result) => {
+      if(err) throw err;
+      res.redirect("/users");
+    })
+  }  catch(err) {
+    console.log(err);
+    res.send("Something is wrong in DB");
+  }
+})
 
 
 app.listen(port, () => {
