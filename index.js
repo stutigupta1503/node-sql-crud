@@ -114,6 +114,35 @@ app.post("/user", (req, res) => {
   }
 })
 
+// DELETE USER
+app.get("/user/:id/delete", (req, res) => {
+  let {id} = req.params;
+  let q = `SELECT * FROM user WHERE id='${id}'`;
+  try {
+    connection.query(q, (err, result) => {
+      if (err) throw err;
+      let user = result[0];
+      res.render("delete.ejs", {user});
+    })
+  } catch(err) {
+    console.log(err);
+    res.send("Something is wrong in DB");
+  }
+})
+app.delete("/user/:id/delete", (req, res) => {
+  let {id} = req.params;
+  let {email, password} = req.body;
+  let q = `DELETE FROM user WHERE id = '${id}' AND email = '${email}' AND password = '${password}'`;
+  try {
+    connection.query(q, (err, result) => {
+      if(err) throw err;
+      res.redirect("/users");
+    })
+  } catch(err) {
+    console.log(err);
+    res.send("Something is wrong in DB");
+  }
+})
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
